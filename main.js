@@ -291,7 +291,7 @@ function openPopup() {
   closeButton.innerText = "x";
   closeButton.id = "xButton"; // Assign an ID for event handling
   closeButton.style.position = "absolute";
-  closeButton.style.top = "10px";
+  closeButton.style.top = "-32px";
   closeButton.style.right = "10px";
   closeButton.style.cursor = "pointer";
 

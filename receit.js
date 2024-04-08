@@ -5,7 +5,7 @@ let letters = ["&", "g", "a", "z", "e", "*", "#"];
 // let letters = [ 'g', 'a', 'z', 'e'];
 new p5((p) => {
   p.setup = function () {
-    let canvas = p.createCanvas(500, 500);
+    let canvas = p.createCanvas(303, 200);
     canvas.parent("canvasContainer");
 
     gridSizeSlider = p.createSlider(6, 55, 7);

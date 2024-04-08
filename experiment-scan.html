@@ -11,6 +11,16 @@
         overflow: hidden; /* Hide overflow */
         background-color: white;
       }
+
+      #submitButton {
+        z-index: 5 !important;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
     </style>
   </head>
   <body>
@@ -20,7 +30,7 @@
 
     <!-- Div to hold the p5.js sketch -->
     <div id="sketchContainer"></div>
-    <button id="submitButton">Submit</button>
+    <div id="submitButton">Submit</div>
 
     <script>
       // Daniel Shiffman
