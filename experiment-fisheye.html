@@ -7,24 +7,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
       body {
-        background-color: white; /* Set background color to red */
-        margin: 0; /* Remove default margin */
-        overflow: hidden; /* Hide overflow */
+        background-color: white;
+        margin: 0;
+        overflow: hidden;
       }
 
       #submitButton {
         z-index: 100000;
         bottom: 10px;
       }
+
+      .submittedText {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: green;
+        font-size: 24px;
+        /* display: none; */
+      }
     </style>
   </head>
   <body>
     <!-- <h1>Embedded Website</h1> -->
 
-    <!-- <button onclick="requestCameraAccess()">Request Camera Access</button> -->
-
     <!-- Div to hold the p5.js sketch -->
     <div id="sketchContainer"></div>
+
+    <div class="submittedText">Submitted</div>
 
     <button id="submitButton">Submit</button>
 
@@ -33,8 +43,7 @@
       let video;
       let canvas;
       let test;
-//josjklsjlslksl
-      // shaders
+      // Shaders
       var frag = `
 #ifdef GL_ES
 precision mediump float;
@@ -105,7 +114,7 @@ gl_FragColor = vec4(color,1.);
     }
 `;
 
-      // setup
+      // Setup
       function setup() {
         pixelDensity(1);
         canvas = createCanvas(windowWidth, windowHeight, WEBGL);
@@ -117,6 +126,11 @@ gl_FragColor = vec4(color,1.);
         video.hide(); // Hide the video element
 
         test = createShader(vert, frag); // Create shader
+
+        // Add click event listener to canvas
+        canvas.elt.addEventListener("click", function () {
+          uploadToFirebase();
+        });
       }
 
       function draw() {
@@ -149,7 +163,17 @@ gl_FragColor = vec4(color,1.);
       function windowResized() {
         resizeCanvas(windowWidth, windowHeight);
       }
+
+      // Firebase upload function
+      function uploadToFirebase() {
+        console.log("Uploading to Firebase...");
+        // Implement your Firebase upload logic here
+      }
+
+      // Event listener to upload to Firebase on click anywhere on the DOM
+      document.body.addEventListener("click", uploadToFirebase);
     </script>
+    <!-- Include your Firebase configuration and upload logic script here -->
     <script type="module" src="upload-firebase.js" async defer></script>
   </body>
 </html>

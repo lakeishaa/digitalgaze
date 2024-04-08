@@ -4,6 +4,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
     <script src="https://www.auduno.com/clmtrackr/build/clmtrackr.min.js"></script>
+    <script src="html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://use.typekit.net/pog5mjd.css" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <meta charset="utf-8" />
@@ -28,11 +29,33 @@
         <!-- </div> -->
       </div>
 
+      <!-- Button to open the pop-up -->
+      <!-- <button onclick="openPopup()">Open Pop-up</button> -->
+
+      <!-- Pop-up content -->
+      <!-- <div id="capture" style="padding: 10px; background: #f5da55"> -->
+        <!-- <h4 style="color: #000; ">Hello world!</h4> -->
+        <div id="popup" class="popup">
+          <!-- Content will be dynamically inserted here -->
+        <!-- <button class="xButton">x</button> -->
+          <div id="iframeContainer"></div>
+          <div id="canvasContainer"></div>
+          <div id="popupContent"></div>
+          <!-- <button id="downloadButton">Download Popup Content as Image</button> -->
+
+        </div>
+      <!-- </div> -->
+
+      <!-- Overlay to darken the background -->
+      <div id="overlay" class="overlay"></div>
+
+
       <canvas id="myCanvas"></canvas>
     </div>
     <main></main>
     <!-- <script src="sketch-3-copy.js"></script> -->
     <script src="sketch-5.js"></script>
-    <script src="main.js"></script>
+    <script src="main-2.js"></script>
+    <script src="receit.js"></script>
   </body>
 </html>

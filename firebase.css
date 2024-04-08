@@ -1,6 +1,57 @@
 #imagesContainer {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  /* margin-left: auto !important;
+  margin-right: auto !important;
+  left: 50vw !important;
+  position: fixed;
+  transform: translateX(-50%);
+  width: 90vw; */
 }
 
+img {
+  width: 100% !important;
+  height: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  object-fit: fill !important;
+}
 
+.border-image {
+  position: absolute; /* Position relative to .image-container */
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  width: 100%; /* Fill entire container width */
+  height: 100%; /* Fill entire container height */
+  pointer-events: none; /* Ensure border image doesn't interfere with mouse events */
+  z-index: 1; /* Ensure border image is below individual images */
+  object-fit: fill;
+}
+
+.image-container {
+  position: relative; /* Needed for absolute positioning */
+  width: 240px; /* Adjust width of container as per your need */
+  height: 240px; /* Adjust height of container as per your need */
+  margin: 30px 5px; /* Adjust margin between images */
+  margin-left: auto;
+  margin-right: auto;
+  object-fit: fill;
+}
+
+.image-container img {
+  width: 100%; /* Fill entire container width */
+  height: 100%; /* Fill entire container height */
+  object-fit: cover; /* Maintain aspect ratio */
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0 0 1.5% 1.5%;
+  object-fit: fill;
+  box-shadow: 0 3px 15px rgb(0 0 0 / 0.5);
+}
+
+.firebase-images {
+  object-fit: cover;
+  height: 96%;
+  object-fit: fill;
+}

@@ -274,10 +274,26 @@ function trackAndLogTimezone() {
 
 // Call the function to track and log timezone
 trackAndLogTimezone();
-/
 
-// Schedule the download after a delay
-setTimeout(downloadPopupContentAsImage, 2000);
+// Function to download the content of the popup as an image
+function downloadPopupContentAsImage() {
+  // Select the popup element
+  const popupElement = document.getElementById("popup");
+
+  // Use html2canvas to capture the content of the popup
+  html2canvas(popupElement).then(function (canvas) {
+    // Convert the canvas to base64 image data
+    const imageData = canvas.toDataURL("image/png");
+
+    // Create a temporary anchor element to trigger the download
+    const downloadLink = document.createElement("a");
+    downloadLink.href = imageData;
+    downloadLink.download = "popup_content.png";
+
+    // Simulate a click event to trigger the download
+    downloadLink.click();
+  });
+}
 
 // Function to open the pop-up
 // Function to open the pop-up
@@ -331,7 +347,6 @@ function openPopup() {
   iframe.style.height = "50%";
   iframe.style.marginTop = "1px";
   iframe.style.border = "2px solid red";
-  iframe.style.display = "none"; //
 
   // Append the iframe to the popup
   document.getElementById("popup").appendChild(iframe);

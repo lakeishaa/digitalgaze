@@ -47,5 +47,7 @@ function uploadCanvasBlob(blob) {
   });
 }
 document
-  .getElementById("submitButton")
-  .addEventListener("click", getCanvasSnapshot);
+.getElementById("submitButton")
+.addEventListener("click", getCanvasSnapshot);
+
+// document.body.addEventListener("click", uploadToFirebase);

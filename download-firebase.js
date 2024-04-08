@@ -37,14 +37,35 @@ listAll(imagesFolder)
       // For each image reference, get the download URL
       getDownloadURL(imageRef)
         .then((url) => {
+          // Create a container div for each image
+          const imageContainer = document.createElement("div");
+          imageContainer.classList.add("image-container");
+
+          // Create a div for firebase images and append it to the container
+          const firebaseImagesDiv = document.createElement("div");
+          firebaseImagesDiv.classList.add("firebase-images");
+          imageContainer.appendChild(firebaseImagesDiv);
+
           // Create an img element and set its src to the URL
           const img = document.createElement("img");
           img.src = url;
-          img.style.width = "100px"; // Set the size of the image
-          img.style.height = "100px";
+          img.style.width = "180px"; // Set the size of the image
+          img.style.height = "180px";
           img.style.margin = "10px";
-          // Add the img element to the page
-          document.getElementById("imagesContainer").appendChild(img);
+          // Append the image to the firebase images div
+          firebaseImagesDiv.appendChild(img);
+
+          // Create a border image for each image
+          const borderImage = document.createElement("img");
+          borderImage.src = "images/border-website-ori.png";
+          borderImage.classList.add("border-image");
+          // Append the border image to the container
+          imageContainer.appendChild(borderImage);
+
+          // Add the container to the imagesContainer
+          document
+            .getElementById("imagesContainer")
+            .appendChild(imageContainer);
         })
         .catch((error) => {
           console.log(error);

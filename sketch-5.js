@@ -38,171 +38,177 @@ function openModal(url) {
   console.log("Opening modal with URL:", url);
 }
 
-function setup() {
-  createCanvas(800, 800); // Double the size of the canvas
+new p5((p) => {
+  p.setup = function () {
+    p.createCanvas(800, 800); // Double the size of the canvas
 
-  canvasX = (windowWidth - width) / 2; // Calculate canvas X position
-  canvasY = (windowHeight - height) / 2; // Calculate canvas Y position
+    canvasX = (p.windowWidth - p.width) / 2; // Calculate canvas X position
+    canvasY = (p.windowHeight - p.height) / 2; // Calculate canvas Y position
 
-  createCanvas(800, 800).position(canvasX, canvasY); // Set canvas position
+    p.createCanvas(800, 800).position(canvasX, canvasY); // Set canvas position
 
-  capture = createCapture(
-    {
-      audio: false,
-      video: {
-        width: w,
-        height: h,
+    capture = p.createCapture(
+      {
+        audio: false,
+        video: {
+          width: w,
+          height: h,
+        },
       },
-    },
-    function () {
-      console.log("capture ready.");
+      function () {
+        console.log("capture ready.");
+      }
+    );
+    capture.elt.setAttribute("playsinline", "");
+    capture.size(w, h);
+    capture.hide();
+
+    p.colorMode(p.HSB);
+
+    tracker = new clm.tracker();
+    tracker.init();
+    tracker.start(capture.elt);
+
+    centerX = p.width / 2;
+    centerY = p.height / 2;
+  };
+
+  let hoveredCircle = -1; // Index of the circle being hovered, initialized to -1
+
+  p.draw = function () {
+    var positions = tracker.getCurrentPosition();
+
+    if (positions.length > 0) {
+      p.background(255); // Set the background color to grey
+
+      // Drop shadow for the white circle
+      p.noStroke();
+      p.fill(0, 50); // Set the shadow color and transparency
+      p.ellipse(p.width / 2 + 10, p.height / 2 + 10, 400); // Draw the shadow with an offset
+
+      // Whites of the eye
+      p.strokeWeight(1);
+      p.stroke(0);
+      p.fill(255);
+      p.ellipse(p.width / 2, p.height / 2, 400); // Draw the white circle
+
+      // Iris
+      let xc = p.constrain(p.map(positions[62][0], 0, w, p.width, 0), 340, 460); // Adjust the mapping and constrain
+      let xs = p.constrain(
+        p.map(positions[62][1], 0, h, 0, p.height),
+        340,
+        460
+      ); // Adjust the mapping and constrain
+      p.fill(0, 0, 10, 0.95); // Adjust the alpha value (0.5 = 50% transparency)
+      p.circle(xc, xs, 200); // Double the size
+
+      // Draw webcam frame at the position of the iris
+      p.blendMode(p.OVERLAY);
+      // tint(255, 55); // Set the transparency (100 = semi-transparent)
+
+      let frameSize = 200; // Size of the webcam frame
+      let frameX = xc - frameSize / 2; // X position of the frame
+      let frameY = xs - frameSize / 2; // Y position of the frame
+      p.image(capture, frameX, frameY, frameSize, frameSize);
+
+      // Reset blend mode for subsequent drawings
+      p.blendMode(p.BLEND);
+
+      // Glare
+      p.fill(255);
+      p.noStroke();
+      p.ellipse(xc + 40, xs - 40, 40); // Draw the glare circle
+
+      // Draw circles in a loop
+      for (let i = 0; i < numCircles; i++) {
+        // Calculate the angle for this circle
+        let angle = i * (p.TWO_PI / numCircles);
+        p.strokeWeight(1);
+        p.stroke(000000);
+        if (hoveredCircle === i) {
+          p.fill("black"); // Change color to red when hovered
+        } else {
+          p.fill("white"); // Otherwise, keep it black
+        }
+
+        // Calculate the position of the circle
+        let x = centerX + p.cos(angle) * radius;
+        let y = centerY + p.sin(angle) * radius;
+
+        // Draw the circle
+        p.ellipse(x, y, 20, 20);
+      }
     }
-  );
-  capture.elt.setAttribute("playsinline", "");
-  capture.size(w, h);
-  capture.hide();
+  };
 
-  colorMode(HSB);
-
-  tracker = new clm.tracker();
-  tracker.init();
-  tracker.start(capture.elt);
-
-  centerX = width / 2;
-  centerY = height / 2;
-}
-
-let hoveredCircle = -1; // Index of the circle being hovered, initialized to -1
-
-function draw() {
-  var positions = tracker.getCurrentPosition();
-
-  if (positions.length > 0) {
-    background(255); // Set the background color to grey
-
-    // Drop shadow for the white circle
-    noStroke();
-    fill(0, 50); // Set the shadow color and transparency
-    ellipse(width / 2 + 10, height / 2 + 10, 400); // Draw the shadow with an offset
-
-    // Whites of the eye
-    strokeWeight(1);
-    stroke(0);
-    fill(255);
-    ellipse(width / 2, height / 2, 400); // Draw the white circle
-
-    // Iris
-    let xc = constrain(map(positions[62][0], 0, w, width, 0), 340, 460); // Adjust the mapping and constrain
-    let xs = constrain(map(positions[62][1], 0, h, 0, height), 340, 460); // Adjust the mapping and constrain
-    fill(0, 0, 10, 0.95); // Adjust the alpha value (0.5 = 50% transparency)
-    circle(xc, xs, 200); // Double the size
-
-    // Draw webcam frame at the position of the iris
-    blendMode(OVERLAY);
-    // tint(255, 55); // Set the transparency (100 = semi-transparent)
-
-    let frameSize = 200; // Size of the webcam frame
-    let frameX = xc - frameSize / 2; // X position of the frame
-    let frameY = xs - frameSize / 2; // Y position of the frame
-    image(capture, frameX, frameY, frameSize, frameSize);
-
-    // Reset blend mode for subsequent drawings
-    blendMode(BLEND);
-
-    // Glare
-    fill(255);
-    noStroke();
-    ellipse(xc + 40, xs - 40, 40); // Draw the glare circle
-
-    // Draw circles in a loop
+  p.mouseMoved = function () {
+    // Check if mouse is inside any circle
+    hoveredCircle = -1; // Reset the hovered circle index
     for (let i = 0; i < numCircles; i++) {
       // Calculate the angle for this circle
-      let angle = i * (TWO_PI / numCircles);
-      strokeWeight(1);
-      stroke(000000);
-      if (hoveredCircle === i) {
-        fill("black"); // Change color to red when hovered
-      } else {
-        fill("white"); // Otherwise, keep it black
-      }
-
+      let angle = i * (p.TWO_PI / numCircles);
       // Calculate the position of the circle
-      let x = centerX + cos(angle) * radius;
-      let y = centerY + sin(angle) * radius;
-
-      // Draw the circle
-      ellipse(x, y, 20, 20);
+      let x = centerX + p.cos(angle) * radius;
+      let y = centerY + p.sin(angle) * radius;
+      // Check if mouse is inside this circle
+      let d = p.dist(p.mouseX, p.mouseY, x, y);
+      if (d < 10) {
+        // Radius of the circle is 10 (diameter 20)
+        // Log which circle is being hovered
+        hoveredCircle = i;
+        return false; // Prevent default action of the mouseMoved event
+      }
     }
-  }
-}
+  };
 
-function mouseMoved() {
-  // Check if mouse is inside any circle
-  hoveredCircle = -1; // Reset the hovered circle index
-  for (let i = 0; i < numCircles; i++) {
-    // Calculate the angle for this circle
-    let angle = i * (TWO_PI / numCircles);
-    // Calculate the position of the circle
-    let x = centerX + cos(angle) * radius;
-    let y = centerY + sin(angle) * radius;
-    // Check if mouse is inside this circle
-    let d = dist(mouseX, mouseY, x, y);
-    if (d < 10) {
-      // Radius of the circle is 10 (diameter 20)
-      // Log which circle is being hovered
-      hoveredCircle = i;
-      return false; // Prevent default action of the mouseMoved event
+  p.mousePressed = function () {
+    // Check if mouse is inside any circle
+    for (let i = 0; i < numCircles; i++) {
+      // Calculate the angle for this circle
+      let angle = i * (p.TWO_PI / numCircles);
+      // Calculate the position of the circle
+      let x = centerX + p.cos(angle) * radius;
+      let y = centerY + p.sin(angle) * radius;
+      // Check if mouse is inside this circle
+      let d = p.dist(p.mouseX, p.mouseY, x, y);
+      if (d < 10) {
+        // Radius of the circle is 10 (diameter 20)
+        // Log which circle is being clicked
+        console.log("Circle " + (i + 1) + " clicked");
+        // Open the corresponding URL in a modal
+        openModal(urls[i]);
+        return false; // Prevent default action of the click event
+      }
     }
-  }
-}
+  };
 
-function mousePressed() {
-  // Check if mouse is inside any circle
-  for (let i = 0; i < numCircles; i++) {
-    // Calculate the angle for this circle
-    let angle = i * (TWO_PI / numCircles);
-    // Calculate the position of the circle
-    let x = centerX + cos(angle) * radius;
-    let y = centerY + sin(angle) * radius;
-    // Check if mouse is inside this circle
-    let d = dist(mouseX, mouseY, x, y);
-    if (d < 10) {
-      // Radius of the circle is 10 (diameter 20)
-      // Log which circle is being clicked
-      console.log("Circle " + (i + 1) + " clicked");
-      // Open the corresponding URL in a modal
-      openModal(urls[i]);
-      return false; // Prevent default action of the click event
-    }
-  }
-}
-
-var modal = document.getElementById("myModal");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-  modal.style.display = "none";
-};
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-};
-
-// Function to open URL in a modal
-function openModal(url) {
   var modal = document.getElementById("myModal");
-  var modalFrame = document.getElementById("modalFrame");
 
-  modal.style.display = "block"; // Display the modal
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
 
-  // Set the iframe source to the URL
-  modalFrame.src = url;
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
 
-  console.log("Opening modal with URL:", url);
-}
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  // Function to open URL in a modal
+  function openModal(url) {
+    var modal = document.getElementById("myModal");
+    var modalFrame = document.getElementById("modalFrame");
+
+    modal.style.display = "block"; // Display the modal
+
+    // Set the iframe source to the URL
+    modalFrame.src = url;
+
+    console.log("Opening modal with URL:", url);
+  }
+});
