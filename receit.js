@@ -8,7 +8,7 @@ new p5((p) => {
     let canvas = p.createCanvas(303, 200);
     canvas.parent("canvasContainer");
 
-    gridSizeSlider = p.createSlider(6, 55, 7);
+    gridSizeSlider = p.createSlider(1, 10, 5);
     gridSizeSlider.position(10, -200);
 
     invertSlider = p.createSlider(0, 1, 0);

@@ -65,7 +65,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Call openPopup after 2 minutes
   // setTimeout(openPopup, 2 * 60 * 1000);
-  setTimeout(openPopup, 2 * 1000);
+  // 2 seconds below
+  // setTimeout(openPopup, 2 * 1000);
+  setTimeout(openPopup, 1 * 60 * 1000);
 });
 
 let timerInterval;
@@ -371,7 +373,7 @@ function openPopup() {
         .toDataURL("image/png")
         .replace("image/png", "image/octet-stream");
       let link = document.createElement("a");
-      link.download = "download.png";
+      link.download = "YourDigialFootprint.png";
       link.href = image;
       link.click();
     });

@@ -1,4 +1,8 @@
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
+
   const numCursors = 35; // Number of custom cursors
   const cursors = [];
   const cursorEases = [
@@ -59,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // document.getElementById("overlay").style.display = "none";
     }
   });
-
+  
   // Start the stopwatch when the page loads
   startStopwatch();
 
@@ -504,3 +508,8 @@ function updatePopupTimerDisplay() {
 function pad(num) {
   return (num < 10 ? "0" : "") + num;
 }
+
+
+
+
+

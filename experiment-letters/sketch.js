@@ -8,10 +8,10 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   gridSizeSlider = createSlider(20, 55, 7);
-  gridSizeSlider.position(10, 10);
+  gridSizeSlider.position(-30, -30);
 
   invertSlider = createSlider(0, 1, 0);
-  invertSlider.position(200, 10);
+  invertSlider.position(200, -30);
 
   video = createCapture(VIDEO);
   video.size(width, height);

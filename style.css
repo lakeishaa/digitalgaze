@@ -70,6 +70,12 @@ h1 {
   margin-left: 20px;
 }
 
+#desc-1:hover{
+  color: white;
+  background-color: black;
+  cursor: pointer;
+}
+
 #desc-2 {
   font-size: 24px;
   border: 2px solid black;
@@ -86,8 +92,11 @@ h1 {
 }
 
 #desc-2:hover {
-  color: white !important;
   background-color: black;
+}
+
+#plussign:hover{
+  color: white !important;
 }
 
 #desc-2 a {
@@ -282,6 +291,26 @@ background: rgb(255, 255, 255); */
   /* height: 60%; */
 }
 
+
+
+.more-info {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  z-index: 998; /* Ensure the popup is below the close button overlay */
+  width: 300px;
+  font-size: 10px;
+  /* display:block; */
+  /* height: 60%; */
+  /* didplay: none; */
+}
+
 .overlay {
   display: none;s
   position: fixed;
@@ -300,9 +329,20 @@ background: rgb(255, 255, 255); */
 
 #xButton {
   top: -32px !important;
-  right: 0;
+  right: 0px !important;
 }
 
 #defaultCanvas1{
   width: 300px !important;
+}
+
+.hide{
+  display: block;
+}
+
+
+#clickx{
+  top: -32px !important;
+  right: 0px !important;
+  position: fixed;
 }
