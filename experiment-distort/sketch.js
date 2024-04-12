@@ -19,7 +19,7 @@ function setup() {
   noStroke();
 
   distSlider = createSlider(0.25, 10, 0.25);
-  distSlider.position(10, 10);
+  distSlider.position(10, -30);
   distSlider.size(300, 20);
   distSlider.addClass("mySliders");
 }

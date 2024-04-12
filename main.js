@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Call openPopup after 2 minutes
   // setTimeout(openPopup, 2 * 60 * 1000);
   setTimeout(openPopup, 2 * 1000);
+  
 });
 
 let timerInterval;
@@ -508,8 +509,6 @@ function updatePopupTimerDisplay() {
 function pad(num) {
   return (num < 10 ? "0" : "") + num;
 }
-
-
 
 
 
