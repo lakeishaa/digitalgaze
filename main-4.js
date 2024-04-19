@@ -1,8 +1,4 @@
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
   const numCursors = 35; // Number of custom cursors
   const cursors = [];
   const cursorEases = [
@@ -63,14 +59,16 @@ document.addEventListener("DOMContentLoaded", function () {
       // document.getElementById("overlay").style.display = "none";
     }
   });
-  
+
   // Start the stopwatch when the page loads
   startStopwatch();
 
   // Call openPopup after 2 minutes
   // setTimeout(openPopup, 2 * 60 * 1000);
-  setTimeout(openPopup, 2 * 1000);
-  
+  // 2 seconds below
+  // setTimeout(openPopup, 2 * 1000);
+  // THIS ONE BELOW
+  setTimeout(openPopup, 1 * 60 * 1000);
 });
 
 let timerInterval;
@@ -279,42 +277,39 @@ function trackAndLogTimezone() {
 
 // Call the function to track and log timezone
 trackAndLogTimezone();
-/
 
-// Schedule the download after a delay
-setTimeout(downloadPopupContentAsImage, 2000); 
+// Function to download the content of the popup as an image
+function downloadPopupContentAsImage() {
+  // Select the popup element
+  const popupElement = document.getElementById("popup");
 
+  // Use html2canvas to capture the content of the popup
+  html2canvas(popupElement).then(function (canvas) {
+    // Convert the canvas to base64 image data
+    const imageData = canvas.toDataURL("image/png");
 
-// Function to generate random numbers
-function generateRandomNumbers() {
-  const randomNumber = Math.random() * 1000000000; // Generate a random number
-  return randomNumber.toFixed(2); // Format the number to have two decimal places
+    // Create a temporary anchor element to trigger the download
+    const downloadLink = document.createElement("a");
+    downloadLink.href = imageData;
+    downloadLink.download = "popup_content.png";
+
+    // Simulate a click event to trigger the download
+    downloadLink.click();
+  });
 }
-
-// Function to print random numbers
-function printRandomNumbers() {
-  const randomNumbers = generateRandomNumbers();
-  // Create a paragraph element for random numbers
-  var randomNumbersParagraph = document.createElement("p");
-  randomNumbersParagraph.textContent = "Random Numbers: " + randomNumbers;
-  // Append random numbers paragraph to the popup content
-  document.getElementById("popupContent").appendChild(randomNumbersParagraph);
-}
-
 
 // Function to open the pop-up
 // Function to open the pop-up
 function openPopup() {
-  // Show the pop-up and overlay
+  // Show the pop-up
   document.getElementById("popup").style.display = "block";
-  // document.getElementById("overlay").style.display = "block";
 
   // Create the close button
   var closeButton = document.createElement("button");
   closeButton.innerText = "x";
   closeButton.id = "xButton"; // Assign an ID for event handling
   closeButton.style.position = "absolute";
-  closeButton.style.top = "-32px";
+  closeButton.style.top = "10px";
   closeButton.style.right = "10px";
   closeButton.style.cursor = "pointer";
 
@@ -323,46 +318,15 @@ function openPopup() {
 
   // Add event listener to the close button
   closeButton.addEventListener("click", function () {
-    // Hide the popup and overlay
+    // Hide the popup
     document.getElementById("popup").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
     // Remove the close button from the DOM
     closeButton.remove();
   });
 
-  // // Create and append iframe element
-  // var iframe = document.createElement("iframe");
-  // iframe.src = "experiment-letters-2/index.html";
-  // iframe.style.width = "80%";
-  // iframe.style.height = "50%";
-  // iframe.style.border = "none";
-  // iframe.style.top = "20px";
-  // iframe.style.position = "relative";
-
-  // Create a container div for the iframe
-  var iframeContainer = document.createElement("div");
-  iframeContainer.style.width = "100%"; // Adjust width as needed
-  iframeContainer.style.height = "100%"; // Adjust height as needed
-  iframeContainer.style.margin = "auto"; // Center the container
-  // iframeContainer.style.overflow = "auto"; // Add scrolling if necessary
-  iframeContainer.style.position = "relative"; // Positioning for absolute child elements
-
-  // Create and append iframe element
-  var iframe = document.createElement("iframe");
-  iframe.src = "experiment-letters-2/index.html";
-  iframe.style.width = "80%";
-  iframe.style.height = "50%";
-  iframe.style.marginTop = "1px";
-  iframe.style.border = "2px solid red";
-  iframe.style.display = "none"; //
-
-  // Append the iframe to the popup
-  document.getElementById("popup").appendChild(iframe);
-
   // Call functions to print the provided information
   printLoginStatus();
-  printGeolocation();
-  printIPAddress();
+  // printIPAddress();
   printDeviceInfo();
   printWebsiteOpenedTime();
   printTimezone();
@@ -372,6 +336,59 @@ function openPopup() {
   printDuration();
   printRandomNumbers(); // Call function to print random numbers
 
+  // Retrieve and append geolocation information
+  printGeolocation().then(() => {
+    // Delay the image download process by 3 seconds after geolocation info is appended
+    setTimeout(downloadPopupImage, 2000);
+  });
+}
+
+// Function to print geolocation
+function printGeolocation() {
+  return new Promise((resolve, reject) => {
+    if ("geolocation" in navigator) {
+      // Get the user's current position
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          // Access latitude and longitude from the position object
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+          // Append geolocation content to the popup
+          document.getElementById("popupContent").innerHTML +=
+            "<p>Latitude : " +
+            latitude +
+            "</p>" +
+            "<p>Longitude : " +
+            longitude +
+            "</p>";
+          resolve(); // Resolve the promise after appending geolocation info
+        },
+        function (error) {
+          // Handle errors if any occur
+          console.error("Error getting geolocation:", error.message);
+          reject(error); // Reject the promise if there's an error
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+      reject(new Error("Geolocation not supported"));
+    }
+  });
+}
+
+// Function to download the popup content as an image
+function downloadPopupImage() {
+  const popupEl = document.getElementById("popup");
+  html2canvas(popupEl).then((canvas) => {
+    console.log("downloaded image");
+    let image = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    let link = document.createElement("a");
+    link.download = "YourDigialFootprint.png";
+    link.href = image;
+    link.click();
+  });
 }
 
 // Function to print login status
@@ -380,34 +397,6 @@ function printLoginStatus() {
   var isLoggedIn = true; // Placeholder value, replace with your logic
   document.getElementById("popupContent").innerHTML +=
     "<p>Login Status: " + (isLoggedIn ? "Logged In" : "Not Logged In") + "</p>";
-}
-
-// Function to print geolocation
-function printGeolocation() {
-  if ("geolocation" in navigator) {
-    // Get the user's current position
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        // Access latitude and longitude from the position object
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        // Append geolocation content to the popup
-        document.getElementById("popupContent").innerHTML +=
-          "<p>Latitude : " +
-          latitude +
-          "</p>" +
-          "<p>Longitude : " +
-          longitude +
-          "</p>";
-      },
-      function (error) {
-        // Handle errors if any occur
-        console.error("Error getting geolocation:", error.message);
-      }
-    );
-  } else {
-    console.log("Geolocation is not supported by this browser.");
-  }
 }
 
 // Function to print IP address
@@ -422,7 +411,6 @@ function printIPAddress() {
     })
     .catch((error) => console.error("Error getting IP address:", error));
 }
-
 
 // Function to print device information
 function printDeviceInfo() {
@@ -488,6 +476,28 @@ function printPageViews() {
     "<p>Page visits : " + pageViews + "</p>";
 }
 
+// Function to generate random numbers
+function generateRandomNumbers() {
+  const randomNumber = Math.random() * 1000000000; // Generate a random number
+  const formattedNumber = randomNumber.toFixed(0); // Format the number to have no decimal places
+
+  // Insert dots at appropriate positions
+  const formattedNumberWithDots = formattedNumber.replace(
+    /(\d)(?=(\d{3})+(?!\d))/g,
+    "$1."
+  );
+
+  return formattedNumberWithDots; // Return the formatted number
+}
+
+// Function to print random numbers
+function printRandomNumbers() {
+  const randomNumbers = generateRandomNumbers();
+  // Append random numbers content to the popup
+  document.getElementById("popupContent").innerHTML +=
+    "<p>IP Address: " + randomNumbers + "</p>";
+}
+
 // Function to print duration
 function printDuration() {
   // Append duration content to the popup
@@ -530,6 +540,3 @@ function updatePopupTimerDisplay() {
 function pad(num) {
   return (num < 10 ? "0" : "") + num;
 }
-
-
-
